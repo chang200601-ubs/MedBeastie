@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedBeastie 🐾</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/record.css" />
+  <link rel="stylesheet" href="css/info.css" />
+</head>
+<body>
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar">
+    <a href="#" class="nav-logo" onclick="showPage('home')">
+      <span class="logo-icon">🐾</span> MedBeastie
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('home')"   class="active" id="nav-home">首頁</a></li>
+      <li><a href="#" onclick="showPage('record')" id="nav-record">每日記錄</a></li>
+      <li><a href="#" onclick="showPage('info')"   id="nav-info">藥物查詢</a></li>
+    </ul>
+
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-med"   onclick="setMode('med')">💊 吃藥</button>
+      <button class="mode-btn"        id="mode-habit" onclick="setMode('habit')">🌱 好習慣</button>
+    </div>
+
+    <button class="hamburger" id="hamburgerBtn" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="nav-drawer" id="navDrawer">
+    <a href="#" onclick="showPage('home');   closeDrawer()">🏠 首頁</a>
+    <a href="#" onclick="showPage('record'); closeDrawer()">📅 每日記錄</a>
+    <a href="#" onclick="showPage('info');   closeDrawer()">🔍 藥物查詢</a>
+  </div>
+
+  <!-- ══ MAIN ══ -->
+  <main>
+
+    <!-- ── HOME ── -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-mascot" id="heroMascot">🐻</div>
+        <h1>嗨！我是 <em>MedBeastie</em><br>你的吃藥小夥伴 🌿</h1>
+        <p id="heroDesc">忘記吃藥？讓可愛的動物夥伴每天提醒你！輕鬆建立吃藥習慣，不再錯過每一顆藥。</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary"   onclick="showPage('record')">📅 查看今日記錄</button>
+          <button class="btn btn-secondary" onclick="showPage('info')">🔍 藥物查詢</button>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature-card">
+          <div class="icon">⏰</div>
+          <h3>即時提醒</h3>
+          <p>設定時間，彈出視窗提醒你按時服藥，不錯過任何一顆！</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">📅</div>
+          <h3>月曆記錄</h3>
+          <p>以月曆形式查看每天的服藥情況，輕鬆掌握記錄。</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🔍</div>
+          <h3>藥物資訊</h3>
+          <p>快速查詢藥物用途與注意事項，用藥更安心。</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">🌱</div>
+          <h3>好習慣模式</h3>
+          <p>沒有吃藥需求？切換到好習慣模式，追蹤運動、喝水等日常目標！</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RECORD ── -->
+    <section class="page" id="page-record">
+      <div class="record-section">
+        <h2 class="section-title">📅 <span id="recordTitle">每日記錄</span></h2>
+
+        <div class="today-card">
+          <div class="calendar-header">
+            <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+            <h3 id="calMonthLabel"></h3>
+            <button class="cal-nav" onclick="changeMonth(1)">›</button>
+          </div>
+          <div class="calendar-grid" id="calGrid"></div>
+        </div>
+
+        <div class="today-card">
+          <h3 class="section-title" style="font-size:1.1rem; margin-bottom:1rem;">
+            <span id="todayLabel">今天要吃的藥 💊</span>
+          </h3>
+          <div id="medList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── INFO ── -->
+    <section class="page" id="page-info">
+      <div class="info-section">
+        <h2 class="section-title">🔍 藥物資訊查詢</h2>
+        <div class="search-bar">
+          <input class="search-input" id="searchInput" type="text" placeholder="輸入藥名…" />
+          <button class="btn-search" onclick="searchMed()">搜尋</button>
+        </div>
+        <div class="med-cards" id="medCards"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>© 2025 MedBeastie · SumiSumi Team 🐾 · 資料來源：<a href="https://www.mohw.gov.tw" target="_blank">衛福部</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/nav.js"></script>
+  <script src="js/record.js"></script>
+  <script src="js/info.js"></script>
+  <script src="js/mode.js"></script>
+  <script>
+    // Init
+    renderCalendar();
+    renderMedList(medData);
+    renderMedCards(allMeds);
+  </script>
+
+</body>
+</html>
