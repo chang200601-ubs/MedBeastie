@@ -5,449 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedBeastie 🐾</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
-    /* ── CSS Variables ── */
-    :root {
-      --mint:   #a8e6cf;
-      --peach:  #ffd3b6;
-      --sky:    #b8dfff;
-      --yellow: #fff0a3;
-      --pink:   #ffb3c6;
-      --white:  #fffdf9;
-      --dark:   #3a3a4a;
-      --mid:    #6b6b80;
-      --card-bg: rgba(255,255,255,0.85);
-      --shadow: 0 4px 24px rgba(100,100,150,0.10);
-      --radius: 20px;
-    }
-
-    /* ── Reset & Base ── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: var(--white);
-      color: var(--dark);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── Cute dotted background ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle, #cde8ff 1px, transparent 1px);
-      background-size: 28px 28px;
-      opacity: 0.35;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── Navbar ── */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 2rem;
-      background: rgba(255,253,249,0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 2px solid var(--mint);
-      box-shadow: 0 2px 12px rgba(168,230,207,0.18);
-    }
-    .nav-logo {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 1.5rem;
-      color: var(--dark);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .nav-logo span.logo-icon { font-size: 1.6rem; }
-
-    .nav-links {
-      display: flex;
-      list-style: none;
-      gap: 0.4rem;
-    }
-    .nav-links a {
-      text-decoration: none;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--mid);
-      padding: 0.45rem 1rem;
-      border-radius: 50px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .nav-links a:hover,
-    .nav-links a.active {
-      background: var(--mint);
-      color: var(--dark);
-    }
-
-    /* Mode Toggle Pill */
-    .mode-toggle {
-      display: flex;
-      background: #eef6f0;
-      border-radius: 50px;
-      padding: 4px;
-      gap: 4px;
-    }
-    .mode-btn {
-      border: none;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.82rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 50px;
-      background: transparent;
-      color: var(--mid);
-      transition: all 0.2s;
-    }
-    .mode-btn.active {
-      background: var(--dark);
-      color: #fff;
-    }
-
-    /* Hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2.5px;
-      background: var(--dark);
-      border-radius: 4px;
-      transition: transform 0.3s, opacity 0.3s;
-    }
-
-    /* Mobile nav drawer */
-    .nav-drawer {
-      display: none;
-      position: fixed;
-      top: 0; right: 0;
-      height: 100%;
-      width: 240px;
-      background: var(--white);
-      border-left: 2px solid var(--mint);
-      z-index: 200;
-      flex-direction: column;
-      padding: 5rem 1.5rem 2rem;
-      gap: 0.6rem;
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-      box-shadow: -4px 0 20px rgba(0,0,0,0.08);
-    }
-    .nav-drawer.open { transform: translateX(0); }
-    .nav-drawer a {
-      text-decoration: none;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--dark);
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
-      transition: background 0.2s;
-    }
-    .nav-drawer a:hover { background: var(--mint); }
-    .drawer-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.25);
-      z-index: 150;
-    }
-    .drawer-overlay.open { display: block; }
-
-    /* ── Main layout ── */
-    main {
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── PAGE SECTIONS (only one shown at a time) ── */
-    .page { display: none; }
-    .page.active { display: block; }
-
-    /* ═══ HOME PAGE ═══ */
-    .hero {
-      min-height: calc(100vh - 64px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 3rem 1.5rem;
-      gap: 1.8rem;
-    }
-    .hero-mascot { font-size: 5rem; animation: float 3s ease-in-out infinite; }
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-14px); }
-    }
-    .hero h1 {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: clamp(2rem, 6vw, 3.4rem);
-      line-height: 1.2;
-    }
-    .hero h1 em { font-style: normal; color: #4caf8a; }
-    .hero p {
-      max-width: 480px;
-      font-size: 1.05rem;
-      color: var(--mid);
-      line-height: 1.7;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      padding: 0.7rem 1.8rem;
-      border-radius: 50px;
-      border: none;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-    .btn-primary { background: #4caf8a; color: #fff; }
-    .btn-secondary { background: var(--peach); color: var(--dark); }
-
-    /* Feature cards */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      padding: 2rem 2rem 4rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .feature-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      border: 2px solid transparent;
-      transition: border-color 0.2s, transform 0.2s;
-      text-align: center;
-    }
-    .feature-card:hover { border-color: var(--mint); transform: translateY(-4px); }
-    .feature-card .icon { font-size: 2.2rem; margin-bottom: 0.7rem; }
-    .feature-card h3 { font-family: 'Nunito', sans-serif; font-weight: 800; margin-bottom: 0.4rem; }
-    .feature-card p { font-size: 0.88rem; color: var(--mid); line-height: 1.6; }
-
-    /* ═══ RECORD PAGE ═══ */
-    .record-section {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-    .section-title {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 900;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Calendar */
-    .calendar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-    .calendar-header h3 {
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      font-size: 1.1rem;
-    }
-    .cal-nav {
-      background: var(--mint);
-      border: none;
-      border-radius: 50%;
-      width: 34px;
-      height: 34px;
-      font-size: 1rem;
-      cursor: pointer;
-      font-weight: 700;
-      transition: background 0.2s;
-    }
-    .cal-nav:hover { background: #7dd4b0; }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-    .cal-day-label {
-      text-align: center;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.78rem;
-      color: var(--mid);
-      padding: 4px 0;
-    }
-    .cal-day {
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.15s;
-      background: var(--card-bg);
-    }
-    .cal-day:hover { border-color: var(--mint); }
-    .cal-day.today { background: var(--mint); }
-    .cal-day.taken { background: var(--peach); }
-    .cal-day.empty { background: transparent; cursor: default; }
-
-    /* Today's meds */
-    .today-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      margin-top: 1.5rem;
-    }
-    .med-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.8rem 0;
-      border-bottom: 1px dashed #e0e0e0;
-    }
-    .med-item:last-child { border-bottom: none; }
-    .med-check {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2.5px solid var(--mint);
-      background: none;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .med-check.checked { background: var(--mint); }
-    .med-info { flex: 1; }
-    .med-name { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; }
-    .med-time { font-size: 0.8rem; color: var(--mid); }
-
-    /* ═══ MEDICINE INFO PAGE ═══ */
-    .info-section {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
-    }
-    .search-bar {
-      display: flex;
-      gap: 0.6rem;
-      margin-bottom: 1.5rem;
-    }
-    .search-input {
-      flex: 1;
-      padding: 0.75rem 1.2rem;
-      border-radius: 50px;
-      border: 2px solid var(--mint);
-      font-family: 'Noto Sans TC', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      background: var(--card-bg);
-      transition: border-color 0.2s;
-    }
-    .search-input:focus { border-color: #4caf8a; }
-    .btn-search {
-      background: #4caf8a;
-      color: #fff;
-      border: none;
-      border-radius: 50px;
-      padding: 0.75rem 1.4rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: background 0.2s;
-    }
-    .btn-search:hover { background: #3a9a74; }
-
-    .med-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.2rem;
-    }
-    .med-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 1.4rem;
-      box-shadow: var(--shadow);
-      border-left: 5px solid var(--mint);
-    }
-    .med-card h4 { font-family: 'Nunito', sans-serif; font-weight: 800; margin-bottom: 0.4rem; }
-    .med-card p { font-size: 0.85rem; color: var(--mid); line-height: 1.6; }
-    .med-card .tag {
-      display: inline-block;
-      background: var(--sky);
-      border-radius: 50px;
-      padding: 2px 10px;
-      font-size: 0.75rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      margin-top: 0.6rem;
-    }
-
-    /* ── Footer ── */
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.82rem;
-      color: var(--mid);
-      border-top: 2px solid var(--mint);
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 700px) {
-      .navbar { padding: 0.75rem 1rem; }
-      .nav-links, .mode-toggle { display: none; }
-      .hamburger { display: flex; }
-      .nav-drawer { display: flex; }
-
-      .features { padding: 1rem 1rem 3rem; }
-      .record-section, .info-section { padding: 1.5rem 1rem 3rem; }
-
-      .hero-mascot { font-size: 3.5rem; }
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="stylesheet" href="css/record.css" />
+  <link rel="stylesheet" href="css/info.css" />
 </head>
 <body>
 
@@ -458,14 +19,14 @@
     </a>
 
     <ul class="nav-links">
-      <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">首頁</a></li>
+      <li><a href="#" onclick="showPage('home')"   class="active" id="nav-home">首頁</a></li>
       <li><a href="#" onclick="showPage('record')" id="nav-record">每日記錄</a></li>
-      <li><a href="#" onclick="showPage('info')" id="nav-info">藥物查詢</a></li>
+      <li><a href="#" onclick="showPage('info')"   id="nav-info">藥物查詢</a></li>
     </ul>
 
     <div class="mode-toggle">
-      <button class="mode-btn active" id="mode-med" onclick="setMode('med')">💊 吃藥</button>
-      <button class="mode-btn" id="mode-habit" onclick="setMode('habit')">🌱 好習慣</button>
+      <button class="mode-btn active" id="mode-med"   onclick="setMode('med')">💊 吃藥</button>
+      <button class="mode-btn"        id="mode-habit" onclick="setMode('habit')">🌱 好習慣</button>
     </div>
 
     <button class="hamburger" id="hamburgerBtn" aria-label="開啟選單">
@@ -476,9 +37,9 @@
   <!-- Mobile Drawer -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
   <div class="nav-drawer" id="navDrawer">
-    <a href="#" onclick="showPage('home'); closeDrawer()">🏠 首頁</a>
+    <a href="#" onclick="showPage('home');   closeDrawer()">🏠 首頁</a>
     <a href="#" onclick="showPage('record'); closeDrawer()">📅 每日記錄</a>
-    <a href="#" onclick="showPage('info'); closeDrawer()">🔍 藥物查詢</a>
+    <a href="#" onclick="showPage('info');   closeDrawer()">🔍 藥物查詢</a>
   </div>
 
   <!-- ══ MAIN ══ -->
@@ -491,7 +52,7 @@
         <h1>嗨！我是 <em>MedBeastie</em><br>你的吃藥小夥伴 🌿</h1>
         <p id="heroDesc">忘記吃藥？讓可愛的動物夥伴每天提醒你！輕鬆建立吃藥習慣，不再錯過每一顆藥。</p>
         <div class="hero-btns">
-          <button class="btn btn-primary" onclick="showPage('record')">📅 查看今日記錄</button>
+          <button class="btn btn-primary"   onclick="showPage('record')">📅 查看今日記錄</button>
           <button class="btn btn-secondary" onclick="showPage('info')">🔍 藥物查詢</button>
         </div>
       </div>
@@ -525,27 +86,42 @@
       <div class="record-section">
         <h2 class="section-title">📅 <span id="recordTitle">每日記錄</span></h2>
 
-        <!-- Calendar -->
         <div class="today-card">
           <div class="calendar-header">
             <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
-            <h3 id="calMonthLabel">2025 年 6 月</h3>
+            <h3 id="calMonthLabel"></h3>
             <button class="cal-nav" onclick="changeMonth(1)">›</button>
           </div>
-          <div class="calendar-grid" id="calGrid">
-            <!-- injected by JS -->
-          </div>
+          <div class="calendar-grid" id="calGrid"></div>
         </div>
 
-        <!-- Today's tasks -->
-        <div class="today-card" style="margin-top:1.5rem;">
-          <h3 class="section-title" style="font-size:1.1rem;margin-bottom:1rem;">
+        <div class="today-card">
+          <h3 class="section-title" style="font-size:1.1rem; margin-bottom:1rem;">
             <span id="todayLabel">今天要吃的藥 💊</span>
           </h3>
-          <div id="medList">
-            <!-- injected by JS -->
+
+          <!-- 新增藥物 -->
+          <div class="add-med-row">
+            <input class="add-med-name" id="addMedName" type="text" placeholder="藥名" />
+            <input class="add-med-time" id="addMedTime" type="time" />
+            <button class="btn btn-primary" onclick="addMed()">新增</button>
           </div>
+
+          <div id="medList"></div>
         </div>
+
+        <!-- 提醒設定 -->
+        <div class="today-card">
+          <h3 class="section-title" style="font-size:1.1rem; margin-bottom:1rem;">⏰ 設定提醒時間</h3>
+          <div id="notifyStatus" class="notify-status"></div>
+          <div class="notify-row">
+            <input type="time" id="notifyTime" class="notify-input" />
+            <input type="text" id="notifyMsg" class="notify-msg-input" placeholder="提醒訊息（例：記得吃血壓藥！）" />
+            <button class="btn btn-primary" onclick="addReminder()">新增</button>
+          </div>
+          <ul class="reminder-list" id="reminderList"></ul>
+        </div>
+
       </div>
     </section>
 
@@ -557,9 +133,7 @@
           <input class="search-input" id="searchInput" type="text" placeholder="輸入藥名…" />
           <button class="btn-search" onclick="searchMed()">搜尋</button>
         </div>
-        <div class="med-cards" id="medCards">
-          <!-- injected by JS -->
-        </div>
+        <div class="med-cards" id="medCards"></div>
       </div>
     </section>
 
@@ -570,174 +144,18 @@
     <p>© 2025 MedBeastie · SumiSumi Team 🐾 · 資料來源：<a href="https://www.mohw.gov.tw" target="_blank">衛福部</a></p>
   </footer>
 
+  <!-- Scripts -->
+  <script src="js/nav.js"></script>
+  <script src="js/record.js"></script>
+  <script src="js/notify.js"></script>
+  <script src="js/info.js"></script>
+  <script src="js/mode.js"></script>
   <script>
-    /* ──────────────────────────────
-       Page Navigation
-    ─────────────────────────────── */
-    function showPage(name) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + name).classList.add('active');
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      const el = document.getElementById('nav-' + name);
-      if (el) el.classList.add('active');
-      return false;
-    }
-
-    /* ──────────────────────────────
-       Mode Toggle (吃藥 / 好習慣)
-    ─────────────────────────────── */
-    let currentMode = 'med';
-    function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('mode-med').classList.toggle('active', mode === 'med');
-      document.getElementById('mode-habit').classList.toggle('active', mode === 'habit');
-
-      if (mode === 'med') {
-        document.getElementById('heroMascot').textContent = '🐻';
-        document.getElementById('heroDesc').textContent = '忘記吃藥？讓可愛的動物夥伴每天提醒你！輕鬆建立吃藥習慣，不再錯過每一顆藥。';
-        document.getElementById('recordTitle').textContent = '每日記錄';
-        document.getElementById('todayLabel').textContent = '今天要吃的藥 💊';
-        renderMedList(medData);
-      } else {
-        document.getElementById('heroMascot').textContent = '🐰';
-        document.getElementById('heroDesc').textContent = '用好習慣模式追蹤每天的運動、喝水、閱讀，讓你的生活更健康充實！';
-        document.getElementById('recordTitle').textContent = '好習慣記錄';
-        document.getElementById('todayLabel').textContent = '今天的好習慣 🌱';
-        renderMedList(habitData);
-      }
-    }
-
-    /* ──────────────────────────────
-       Hamburger / Drawer
-    ─────────────────────────────── */
-    document.getElementById('hamburgerBtn').addEventListener('click', () => {
-      document.getElementById('navDrawer').classList.add('open');
-      document.getElementById('drawerOverlay').classList.add('open');
-    });
-    function closeDrawer() {
-      document.getElementById('navDrawer').classList.remove('open');
-      document.getElementById('drawerOverlay').classList.remove('open');
-    }
-
-    /* ──────────────────────────────
-       Calendar
-    ─────────────────────────────── */
-    let calDate = new Date();
-    const takenDays = new Set([3, 5, 8, 12, 15, 20]);  // demo data
-
-    function renderCalendar() {
-      const year = calDate.getFullYear();
-      const month = calDate.getMonth();
-      document.getElementById('calMonthLabel').textContent = `${year} 年 ${month + 1} 月`;
-
-      const grid = document.getElementById('calGrid');
-      grid.innerHTML = '';
-
-      const labels = ['日','一','二','三','四','五','六'];
-      labels.forEach(l => {
-        const el = document.createElement('div');
-        el.className = 'cal-day-label';
-        el.textContent = l;
-        grid.appendChild(el);
-      });
-
-      const firstDay = new Date(year, month, 1).getDay();
-      for (let i = 0; i < firstDay; i++) {
-        const el = document.createElement('div');
-        el.className = 'cal-day empty';
-        grid.appendChild(el);
-      }
-
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
-      const today = new Date();
-      for (let d = 1; d <= daysInMonth; d++) {
-        const el = document.createElement('div');
-        el.className = 'cal-day';
-        el.textContent = d;
-        if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-          el.classList.add('today');
-        } else if (takenDays.has(d)) {
-          el.classList.add('taken');
-        }
-        grid.appendChild(el);
-      }
-    }
-
-    function changeMonth(dir) {
-      calDate.setMonth(calDate.getMonth() + dir);
-      renderCalendar();
-    }
-
-    /* ──────────────────────────────
-       Med / Habit List
-    ─────────────────────────────── */
-    const medData = [
-      { name: '血壓藥', time: '早上 08:00' },
-      { name: '維他命 C', time: '早上 08:00' },
-      { name: '腸胃藥', time: '中午 12:00' },
-      { name: '安眠藥', time: '晚上 10:00' },
-    ];
-    const habitData = [
-      { name: '喝 2000ml 水', time: '全天' },
-      { name: '運動 30 分鐘', time: '下午 06:00' },
-      { name: '閱讀 20 頁', time: '晚上 09:00' },
-    ];
-
-    function renderMedList(data) {
-      const el = document.getElementById('medList');
-      el.innerHTML = data.map((m, i) => `
-        <div class="med-item">
-          <button class="med-check" id="chk-${i}" onclick="toggleCheck(${i})"></button>
-          <div class="med-info">
-            <div class="med-name">${m.name}</div>
-            <div class="med-time">${m.time}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function toggleCheck(i) {
-      const btn = document.getElementById('chk-' + i);
-      const checked = btn.classList.toggle('checked');
-      btn.textContent = checked ? '✓' : '';
-    }
-
-    /* ──────────────────────────────
-       Medicine Info
-    ─────────────────────────────── */
-    const allMeds = [
-      { name: '阿斯匹靈', category: '止痛/退燒', desc: '用於緩解輕至中度疼痛、退燒，也可預防心血管疾病。' },
-      { name: '普拿疼', category: '止痛/退燒', desc: '廣泛用於頭痛、發燒及輕度疼痛，應避免與酒精並用。' },
-      { name: '胃乳片', category: '腸胃', desc: '中和胃酸，緩解胃灼熱與消化不良。' },
-      { name: '抗組織胺', category: '過敏', desc: '減輕過敏症狀如打噴嚏、流鼻水、皮膚癢等。' },
-    ];
-
-    function renderMedCards(data) {
-      document.getElementById('medCards').innerHTML = data.map(m => `
-        <div class="med-card">
-          <h4>${m.name}</h4>
-          <p>${m.desc}</p>
-          <span class="tag">${m.category}</span>
-        </div>
-      `).join('');
-    }
-
-    function searchMed() {
-      const q = document.getElementById('searchInput').value.trim().toLowerCase();
-      const results = q ? allMeds.filter(m => m.name.includes(q) || m.category.includes(q)) : allMeds;
-      renderMedCards(results.length ? results : [{ name: '找不到結果', category: '—', desc: '請嘗試其他關鍵字。' }]);
-    }
-
-    document.getElementById('searchInput').addEventListener('keydown', e => {
-      if (e.key === 'Enter') searchMed();
-    });
-
-    /* ──────────────────────────────
-       Init
-    ─────────────────────────────── */
+    // Init
     renderCalendar();
     renderMedList(medData);
     renderMedCards(allMeds);
   </script>
+
 </body>
 </html>
