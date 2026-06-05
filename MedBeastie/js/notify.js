@@ -3,16 +3,9 @@ const reminders = [];
 
 // ── 請求通知權限 ──
 function requestPermission() {
-  if (!('Notification' in window)) {
-    showNotifyStatus('⚠️ 你的瀏覽器不支援通知功能', 'warn');
-    return;
-  }
+  if (!('Notification' in window)) return;
   if (Notification.permission === 'granted') return;
-  Notification.requestPermission().then(permission => {
-    if (permission !== 'granted') {
-      showNotifyStatus('⚠️ 請允許通知權限才能使用提醒功能', 'warn');
-    }
-  });
+  Notification.requestPermission();
 }
 
 // ── 新增提醒 ──
@@ -58,11 +51,11 @@ function renderReminderList() {
   `).join('');
 }
 
-// ── 每分鐘檢查時間 ──
+// ── 檢查時間 ──
 function checkReminders() {
-  const now   = new Date();
-  const hh    = String(now.getHours()).padStart(2, '0');
-  const mm    = String(now.getMinutes()).padStart(2, '0');
+  const now    = new Date();
+  const hh     = String(now.getHours()).padStart(2, '0');
+  const mm     = String(now.getMinutes()).padStart(2, '0');
   const nowStr = `${hh}:${mm}`;
 
   reminders.forEach(r => {
@@ -70,18 +63,37 @@ function checkReminders() {
       r.fired = true;
       fireNotification(r.msg);
     }
-    // 隔天重置（換到新的一分鐘後就能再觸發）
     if (r.time !== nowStr) r.fired = false;
   });
 }
 
+// ── 發送提醒（系統通知 + 頁面橫幅雙保險）──
 function fireNotification(msg) {
-  if (Notification.permission === 'granted') {
-    new Notification('MedBeastie 🐾', {
-      body: msg,
-      icon: 'https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Bear/3D/bear_3d.png'
-    });
+  // 系統通知（如果有權限）
+  if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    new Notification('MedBeastie 🐾', { body: msg });
   }
+  // 頁面內橫幅（無論如何都會跳）
+  showBanner(msg);
+}
+
+// ── 頁面橫幅提醒 ──
+function showBanner(msg) {
+  // 避免重複
+  const existing = document.getElementById('alertBanner');
+  if (existing) existing.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'alertBanner';
+  banner.innerHTML = `
+    <span class="banner-icon">🐾</span>
+    <span class="banner-msg">${msg}</span>
+    <button class="banner-close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  document.body.appendChild(banner);
+
+  // 10 秒後自動消失
+  setTimeout(() => { if (banner.parentElement) banner.remove(); }, 10000);
 }
 
 // ── 狀態提示文字 ──
@@ -94,4 +106,4 @@ function showNotifyStatus(text, type) {
 
 // ── 啟動 ──
 renderReminderList();
-setInterval(checkReminders, 10000); // 每 10 秒檢查一次（更即時）
+setInterval(checkReminders, 10000);

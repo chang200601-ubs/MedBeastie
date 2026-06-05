@@ -62,6 +62,17 @@ function renderCalendar() {
     const el = document.createElement('div');
     el.className = 'cal-day';
 
+    // 漸層：同時有吃藥+好習慣時顯示漸層
+    const hasMed   = r.med === 'taken' || r.med === 'missed';
+    const hasHabit = r.habit;
+    if (hasMed && hasHabit) {
+      const medColor   = r.med === 'taken' ? '#ffd3b6' : '#ffb3b3';
+      const habitColor = '#b8dfff';
+      el.style.background = `linear-gradient(135deg, ${medColor}, ${habitColor})`;
+    } else {
+      colorClasses.forEach(c => el.classList.add(c));
+    }
+
     // 格子內容：日期數字 + emoji（若有）
     const emojiSpan = r.mood ? `<span class="cal-emoji">${r.mood}</span>` : '';
     el.innerHTML = `<span class="cal-num">${d}</span>${emojiSpan}`;
@@ -69,7 +80,6 @@ function renderCalendar() {
     if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
       el.classList.add('today');
     }
-    colorClasses.forEach(c => el.classList.add(c));
     if (openedDay === key) el.classList.add('opened');
 
     el.onclick = () => toggleDayPanel(year, month, d, key);
@@ -264,7 +274,21 @@ function addMed() {
   const time = timeEl.value;
   if (!name || !time) return;
   currentList.push({ name, time, checked: false });
+
+  // 自動加入提醒
+  addReminderAuto(time, `💊 ${name} 吃藥時間到！`);
+
   nameEl.value = '';
   timeEl.value = '';
   renderMedList(currentList);
+}
+
+// ── 自動新增提醒（從藥物清單呼叫）──
+function addReminderAuto(time, msg) {
+  // 避免重複加同樣時間+訊息
+  const exists = reminders.some(r => r.time === time && r.msg === msg);
+  if (exists) return;
+  reminders.push({ time, msg, fired: false });
+  renderReminderList();
+  requestPermission();
 }
