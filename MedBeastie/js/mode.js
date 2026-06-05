@@ -38,12 +38,11 @@ const modeConfig = {
 };
 
 function setMode(mode) {
-  if (currentMode === mode) return; // 同一個模式不重複執行
+  if (currentMode === mode) return;
   currentMode = mode;
 
   const cfg = modeConfig[mode];
 
-  // 只更新有變化的文字，不重建整個 DOM
   modeElements.med.classList.toggle('active', mode === 'med');
   modeElements.habit.classList.toggle('active', mode === 'habit');
   modeElements.heroMascot.textContent  = cfg.mascot;
@@ -51,7 +50,6 @@ function setMode(mode) {
   modeElements.recordTitle.textContent = cfg.recordTitle;
   modeElements.todayLabel.textContent  = cfg.todayLabel;
 
-  // 用 requestAnimationFrame 讓瀏覽器先完成上面的 UI 更新再渲染清單
   requestAnimationFrame(() => renderMedList(cfg.list()));
 }
 
