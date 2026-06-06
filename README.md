@@ -74,8 +74,10 @@ MedBeastie/
 
 | 成員 | 負責項目 |
 |------|---------|
-| （填入姓名） | （填入負責項目） |
-| （填入姓名） | （填入負責項目） |
+|楊承智|網頁架構|
+|張伊傑|網頁美編|
+|陳若綺|互動式功能設定|
+|林憲墉|資料查詢|
 
 ---
 
@@ -89,5 +91,4 @@ MedBeastie 透過提醒功能與每日記錄，協助使用者養成按時服藥
 ## 📎 參考資料
 
 - [MDN Web Docs — Notification API](https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API)
-- [Google Fonts](https://fonts.google.com)
 - [Vercel 部署平台](https://vercel.com)
