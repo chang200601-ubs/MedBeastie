@@ -231,34 +231,66 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;
-  background: #fff;
-  border: 2px solid var(--mint);
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-  padding: 1rem 1.4rem;
+  background: linear-gradient(135deg, #e8f7f0, #fef9e7);
+  border: 2.5px solid var(--mint);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(76, 175, 138, 0.20);
+  padding: 1.2rem 1.6rem;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  min-width: 280px;
+  gap: 1rem;
+  min-width: 300px;
   max-width: 90vw;
-  animation: slideDown 0.3s ease;
+  animation: slideDown 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateX(-50%) translateY(-16px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { opacity: 0; transform: translateX(-50%) translateY(-24px) scale(0.92); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0)     scale(1); }
 }
 
-.banner-icon { font-size: 1.6rem; flex-shrink: 0; }
-.banner-msg  { flex: 1; font-family: 'Noto Sans TC', sans-serif; font-size: 0.95rem; color: var(--dark); }
+.banner-icon {
+  font-size: 2.4rem;
+  flex-shrink: 0;
+  animation: bounce 0.6s ease infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-5px); }
+}
+
+.banner-content { flex: 1; }
+
+.banner-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: #4caf8a;
+  margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+
+.banner-msg {
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 0.95rem;
+  color: var(--dark);
+  font-weight: 500;
+}
 
 .banner-close {
-  background: none;
+  background: #e0f5ec;
   border: none;
-  font-size: 1rem;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 0.85rem;
   color: var(--mid);
   cursor: pointer;
   flex-shrink: 0;
-  padding: 0 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
 }
-.banner-close:hover { color: var(--dark); }
+.banner-close:hover { background: var(--mint); color: white; }

@@ -79,21 +79,20 @@ function fireNotification(msg) {
 
 // ── 頁面橫幅提醒 ──
 function showBanner(msg) {
-  // 避免重複
   const existing = document.getElementById('alertBanner');
   if (existing) existing.remove();
 
   const banner = document.createElement('div');
   banner.id = 'alertBanner';
   banner.innerHTML = `
-    <span class="banner-icon">🐾</span>
-    <span class="banner-msg">${msg}</span>
+    <div class="banner-icon">🐻</div>
+    <div class="banner-content">
+      <div class="banner-title">MedBeastie 提醒你！</div>
+      <div class="banner-msg">${msg}</div>
+    </div>
     <button class="banner-close" onclick="this.parentElement.remove()">✕</button>
   `;
   document.body.appendChild(banner);
-
-  // 10 秒後自動消失
-  setTimeout(() => { if (banner.parentElement) banner.remove(); }, 10000);
 }
 
 // ── 狀態提示文字 ──
